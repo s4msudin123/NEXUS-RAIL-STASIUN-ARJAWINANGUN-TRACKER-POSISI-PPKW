@@ -1,0 +1,2728 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>PPKW TRACKER • Stasiun Arjawinangun (AWN)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-main: #0f172a;
+      --bg-card: #1e293b;
+      --bg-card-hover: #293548;
+      --bg-glass: rgba(30, 41, 59, 0.85);
+      --border-color: #334155;
+      --border-highlight: #475569;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --primary: #3b82f6;
+      --primary-glow: rgba(59, 130, 246, 0.4);
+      --route-red: #ef4444;
+      --route-red-glow: rgba(239, 68, 68, 0.6);
+      --success-green: #10b981;
+      --success-green-glow: rgba(16, 185, 129, 0.4);
+      --warning-amber: #f59e0b;
+      --warning-amber-glow: rgba(245, 158, 11, 0.4);
+      --purple-accent: #8b5cf6;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --font-main: 'Plus Jakarta Sans', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      font-family: var(--font-main);
+    }
+
+    body {
+      background: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #0f172a 60%, #090d16 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Navigation Header */
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(15, 23, 42, 0.92);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-color);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-badge {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #ef4444, #b91c1c);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 14px var(--route-red-glow);
+    }
+
+    .brand-badge svg {
+      width: 24px;
+      height: 24px;
+      stroke: #ffffff;
+      stroke-width: 2.2;
+    }
+
+    .brand-title-group h1 {
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-title-group h1 span {
+      background: linear-gradient(90deg, #ef4444, #f59e0b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .station-pill {
+      font-size: 0.68rem;
+      padding: 2px 7px;
+      background: rgba(59, 130, 246, 0.2);
+      border: 1px solid rgba(59, 130, 246, 0.4);
+      border-radius: 6px;
+      color: #93c5fd;
+      font-weight: 700;
+    }
+
+    .brand-subtitle {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .sync-status-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 30px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #6ee7b7;
+      transition: all 0.3s ease;
+    }
+
+    .sync-status-pill.syncing {
+      background: rgba(59, 130, 246, 0.15);
+      border-color: rgba(59, 130, 246, 0.4);
+      color: #93c5fd;
+    }
+
+    .sync-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 10px #10b981;
+      animation: pulse-dot 2s infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    .btn-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .btn-header:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-highlight);
+    }
+
+    /* Main Container Grid */
+    .app-container {
+      max-width: 1540px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 16px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+      flex: 1;
+    }
+
+    @media (min-width: 1024px) {
+      .app-container {
+        grid-template-columns: 1.25fr 1fr;
+        padding: 24px;
+        align-items: start;
+      }
+    }
+
+    /* Left Column: Visual Map & Live Status */
+    .map-column {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    /* Officer Profile & Live Shift Banner */
+    .officer-banner {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.95));
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    }
+
+    .officer-info {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .officer-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+    }
+
+    .officer-meta h2 {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .officer-meta h2 .edit-name-btn {
+      background: none;
+      border: none;
+      color: var(--primary);
+      cursor: pointer;
+      font-size: 0.85rem;
+      padding: 2px 4px;
+    }
+
+    .officer-submeta {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 3px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .officer-submeta span {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .shift-selector {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(15, 23, 42, 0.6);
+      padding: 4px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+    }
+
+    .shift-chip {
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: transparent;
+      border: none;
+    }
+
+    .shift-chip.active {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 2px 8px var(--primary-glow);
+    }
+
+    /* Live Position Dashboard Bar */
+    .live-status-card {
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      border: 2px solid #ef4444;
+      border-radius: var(--radius-md);
+      padding: 18px 22px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(239, 68, 68, 0.2);
+    }
+
+    .live-status-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #ef4444, #f59e0b, #10b981);
+    }
+
+    .live-status-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 14px;
+      align-items: center;
+    }
+
+    .metric-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .metric-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+    }
+
+    .metric-val-main {
+      font-size: 1.25rem;
+      font-weight: 900;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .metric-val-main.active-target {
+      color: #ef4444;
+      text-shadow: 0 0 12px rgba(239, 68, 68, 0.6);
+    }
+
+    .metric-val-mono {
+      font-family: var(--font-mono);
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #fbbf24;
+    }
+
+    .progress-bar-wrap {
+      grid-column: 1 / -1;
+      margin-top: 6px;
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 10px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #ef4444, #10b981);
+      border-radius: 20px;
+      transition: width 0.5s ease;
+      box-shadow: 0 0 12px rgba(16, 185, 129, 0.6);
+    }
+
+    /* THE MAP CARD: Recreating the reference image with authentic railway tracker style */
+    .map-card {
+      background: #111827;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4);
+    }
+
+    .map-header {
+      padding: 14px 20px;
+      background: rgba(17, 24, 39, 0.95);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .map-title {
+      font-size: 0.9rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .map-legend {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      flex-wrap: wrap;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .legend-dot.red { background: #ef4444; box-shadow: 0 0 6px #ef4444; }
+    .legend-dot.green { background: #10b981; box-shadow: 0 0 6px #10b981; }
+    .legend-dot.grey { background: #64748b; }
+    .legend-dot.blue { background: #3b82f6; }
+
+    /* Interactive SVG Map Viewport */
+    .map-viewport {
+      width: 100%;
+      height: 480px;
+      position: relative;
+      background: 
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        #131a2a;
+      background-size: 32px 32px;
+      overflow: auto;
+      touch-action: pan-x pan-y;
+      cursor: grab;
+      user-select: none;
+    }
+
+    .map-viewport:active {
+      cursor: grabbing;
+    }
+
+    .map-canvas-svg {
+      min-width: 960px;
+      height: 100%;
+      display: block;
+    }
+
+    /* Floating Quick Controls on Map */
+    .map-controls-floating {
+      position: absolute;
+      bottom: 16px;
+      right: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 10;
+    }
+
+    .btn-map-control {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: rgba(30, 41, 59, 0.9);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      font-size: 1rem;
+      transition: all 0.2s ease;
+    }
+
+    .btn-map-control:hover {
+      background: var(--primary);
+      border-color: var(--primary);
+      transform: scale(1.05);
+    }
+
+    .active-info-floating {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      background: rgba(15, 23, 42, 0.88);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      border-radius: var(--radius-sm);
+      padding: 8px 14px;
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 10;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    }
+
+    .active-info-floating .ping-badge {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #ef4444;
+      animation: pulse-dot 1.2s infinite;
+    }
+
+    .active-info-text {
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+
+    .active-info-text span {
+      color: #ef4444;
+    }
+
+    /* Right Column: Interactive Checklist & Log Engine */
+    .control-column {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    /* Quick Action Toolbar (Break Mode & Batch Actions) */
+    .action-toolbar {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .btn-action-main {
+      padding: 14px 18px;
+      border-radius: var(--radius-md);
+      font-size: 0.88rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      cursor: pointer;
+      border: none;
+      transition: all 0.25s ease;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+    }
+
+    .btn-break {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: #0f172a;
+    }
+
+    .btn-break:hover {
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 22px var(--warning-amber-glow);
+    }
+
+    .btn-break.active-break {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: #ffffff;
+      animation: pulse-button 2s infinite;
+    }
+
+    @keyframes pulse-button {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+      50% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+    }
+
+    .btn-finish-all {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #ffffff;
+    }
+
+    .btn-finish-all:hover {
+      background: linear-gradient(135deg, #34d399, #10b981);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 22px var(--success-green-glow);
+    }
+
+    /* Checklist Panel Container */
+    .checklist-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    }
+
+    .checklist-header {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .checklist-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .checklist-title-row h3 {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .filter-tabs {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .filter-tab {
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+
+    .filter-tab:hover {
+      color: var(--text-main);
+      border-color: var(--border-highlight);
+    }
+
+    .filter-tab.active {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+      box-shadow: 0 3px 10px var(--primary-glow);
+    }
+
+    /* Wesel Switch Cards Grid (Thumb-friendly mobile touch targets) */
+    .switch-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      max-height: 520px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    @media (min-width: 640px) {
+      .switch-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .switch-item-card {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .switch-item-card:hover {
+      border-color: var(--border-highlight);
+      background: rgba(30, 41, 59, 0.6);
+    }
+
+    .switch-item-card.is-active {
+      border-color: #ef4444;
+      background: rgba(239, 68, 68, 0.08);
+      box-shadow: 0 0 16px rgba(239, 68, 68, 0.2);
+    }
+
+    .switch-item-card.is-done {
+      border-color: rgba(16, 185, 129, 0.4);
+      background: rgba(16, 185, 129, 0.05);
+    }
+
+    .switch-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .switch-number {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge-direction {
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 6px;
+      text-transform: uppercase;
+    }
+
+    .badge-bdw {
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      color: #fcd34d;
+    }
+
+    .badge-ktm {
+      background: rgba(139, 92, 246, 0.15);
+      border: 1px solid rgba(139, 92, 246, 0.35);
+      color: #c4b5fd;
+    }
+
+    .switch-status-pill {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .status-pending {
+      background: rgba(100, 116, 139, 0.2);
+      color: #94a3b8;
+    }
+
+    .status-active {
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid rgba(239, 68, 68, 0.5);
+      color: #fca5a5;
+      animation: pulse-dot 1.5s infinite;
+    }
+
+    .status-done {
+      background: rgba(16, 185, 129, 0.2);
+      border: 1px solid rgba(16, 185, 129, 0.5);
+      color: #6ee7b7;
+    }
+
+    .switch-card-time {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      background: rgba(0, 0, 0, 0.25);
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
+    }
+
+    .time-row {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .switch-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .btn-switch-action {
+      flex: 1;
+      padding: 9px;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-set-active {
+      background: #ef4444;
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+    }
+
+    .btn-set-active:hover {
+      background: #dc2626;
+      transform: translateY(-1px);
+    }
+
+    .btn-set-done {
+      background: #10b981;
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+    }
+
+    .btn-set-done:hover {
+      background: #059669;
+      transform: translateY(-1px);
+    }
+
+    .btn-reset-single {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+      width: 36px;
+      flex: none;
+    }
+
+    .btn-reset-single:hover {
+      background: rgba(255, 255, 255, 0.16);
+      color: #ffffff;
+    }
+
+    /* History & Activity Log Card */
+    .log-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    }
+
+    .log-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .log-header h3 {
+      font-size: 1.05rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .log-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-log-action {
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-log-action:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .log-table-wrap {
+      max-height: 280px;
+      overflow-y: auto;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+    }
+
+    .log-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.78rem;
+    }
+
+    .log-table th {
+      background: #0f172a;
+      color: var(--text-muted);
+      font-weight: 700;
+      text-align: left;
+      padding: 10px 12px;
+      position: sticky;
+      top: 0;
+      border-bottom: 1px solid var(--border-color);
+      white-space: nowrap;
+    }
+
+    .log-table td {
+      padding: 9px 12px;
+      border-bottom: 1px solid rgba(51, 65, 85, 0.4);
+      color: var(--text-main);
+      white-space: nowrap;
+    }
+
+    .log-table tr:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    /* Modal Styling */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      z-index: 999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-box {
+      background: #1e293b;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      max-width: 480px;
+      width: 100%;
+      padding: 24px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal-header h3 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .modal-close-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.25rem;
+      cursor: pointer;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .form-control {
+      padding: 11px 14px;
+      border-radius: 8px;
+      background: #0f172a;
+      border: 1px solid var(--border-color);
+      color: #ffffff;
+      font-size: 0.9rem;
+      font-family: inherit;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .btn-modal-cancel {
+      padding: 10px 18px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      border: none;
+      color: var(--text-main);
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-modal-save {
+      padding: 10px 20px;
+      border-radius: 8px;
+      background: var(--primary);
+      border: none;
+      color: #ffffff;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 12px var(--primary-glow);
+    }
+
+    /* Toast Notification */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      pointer-events: none;
+    }
+
+    .toast-msg {
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid var(--border-highlight);
+      color: #ffffff;
+      padding: 12px 20px;
+      border-radius: 30px;
+      font-size: 0.84rem;
+      font-weight: 700;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      animation: slide-up 0.3s ease;
+    }
+
+    @keyframes slide-up {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Print styling */
+    @media print {
+      body {
+        background: #ffffff !important;
+        color: #000000 !important;
+      }
+      .app-header, .filter-tabs, .action-toolbar, .map-controls-floating, .btn-switch-action, .log-actions {
+        display: none !important;
+      }
+      .app-container {
+        display: block !important;
+        padding: 0 !important;
+      }
+      .map-card, .checklist-card, .log-card {
+        border: 1px solid #000000 !important;
+        box-shadow: none !important;
+        background: #ffffff !important;
+        page-break-inside: avoid;
+        margin-bottom: 20px;
+      }
+      .log-table-wrap {
+        max-height: none !important;
+        overflow: visible !important;
+      }
+      .log-table th, .log-table td {
+        color: #000000 !important;
+        border-color: #cccccc !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Header Navigation -->
+  <header class="app-header">
+    <div class="brand-box">
+      <div class="brand-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/>
+          <path d="M2 12h20"/>
+        </svg>
+      </div>
+      <div class="brand-title-group">
+        <h1>
+          PPKW TRACKER <span>AWN</span>
+          <span class="station-pill">STASIUN ARJAWINANGUN</span>
+        </h1>
+        <div class="brand-subtitle">Pelacak Posisi & Waktu Pembersihan Wesel Lapangan Real-time</div>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <!-- Sync Status Badge -->
+      <div class="sync-status-pill" id="syncStatusBadge">
+        <div class="sync-dot"></div>
+        <span id="syncStatusText">Tersinkron Real-time (HP ⇄ PC)</span>
+      </div>
+
+      <!-- Sync Settings / Manual Refresh -->
+      <button class="btn-header" id="btnManualSync" title="Segarkan Data Cloud Sekarang">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
+        </svg>
+        <span>Sinkron</span>
+      </button>
+
+      <button class="btn-header" id="btnApiSettings" title="Pengaturan URL Google Sheets">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+      </button>
+
+      <!-- Return to Nexus Rail AWN -->
+      <a href="index.html" class="btn-header" style="background: rgba(59, 130, 246, 0.2); border-color: rgba(59, 130, 246, 0.4); color: #93c5fd;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        <span>Nexus AWN</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Grid Layout -->
+  <main class="app-container">
+
+    <!-- LEFT COLUMN: Map & Live Metrics -->
+    <div class="map-column">
+
+      <!-- Officer Info & Shift Banner -->
+      <div class="officer-banner">
+        <div class="officer-info">
+          <div class="officer-avatar" id="avatarDisplay">🚶</div>
+          <div class="officer-meta">
+            <h2>
+              <span id="officerNameDisplay">SAMSUDIN / PETUGAS PPKW</span>
+              <button class="edit-name-btn" id="btnEditOfficer" title="Ubah Nama Petugas">✏️</button>
+            </h2>
+            <div class="officer-submeta">
+              <span>📅 <b id="currentDateDisplay">Hari Ini</b></span>
+              <span>⏰ <b id="liveClockDisplay">00:00:00 WIB</b></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="shift-selector">
+          <button class="shift-chip active" data-shift="Pagi">Pagi (07-15)</button>
+          <button class="shift-chip" data-shift="Siang">Siang (15-23)</button>
+          <button class="shift-chip" data-shift="Malam">Malam (23-07)</button>
+        </div>
+      </div>
+
+      <!-- Live Active Switch Metric Card -->
+      <div class="live-status-card" id="liveMetricCard">
+        <div class="live-status-grid">
+          <div class="metric-item">
+            <div class="metric-label">📍 POSISI AKTIF SEKARANG</div>
+            <div class="metric-val-main active-target" id="metricActiveTarget">
+              <span id="activePositionLabel">STANDBY DI POS</span>
+            </div>
+          </div>
+
+          <div class="metric-item">
+            <div class="metric-label">🧭 ARAH LINTASAN</div>
+            <div class="metric-val-main" id="metricDirectionLabel">
+              <span style="font-size: 1.05rem; color: #94a3b8;">-</span>
+            </div>
+          </div>
+
+          <div class="metric-item">
+            <div class="metric-label">⏱️ DURASI DI TITIK INI</div>
+            <div class="metric-val-mono" id="metricDurationTimer">00:00:00</div>
+          </div>
+
+          <div class="metric-item">
+            <div class="metric-label">📊 TOTAL PROGRES</div>
+            <div class="metric-val-main" id="metricProgressRatio">0 / 16</div>
+          </div>
+
+          <div class="progress-bar-wrap">
+            <div class="progress-header">
+              <span>Penyelesaian Wesel AWN</span>
+              <span id="progressPercentageText">0%</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" id="progressFillBar" style="width: 0%;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VISUAL ROUTE MAP (Authentic Railway Style Inspired by Reference Image) -->
+      <div class="map-card">
+        <div class="map-header">
+          <div class="map-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5">
+              <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/>
+              <line x1="8" y1="2" x2="8" y2="18"/>
+              <line x1="16" y1="6" x2="16" y2="22"/>
+            </svg>
+            <span>SKEMATIK RUTE WESEL STASIUN ARJAWINANGUN</span>
+          </div>
+          <div class="map-legend">
+            <div class="legend-item"><span class="legend-dot red"></span><span>Sedang Dikerjakan</span></div>
+            <div class="legend-item"><span class="legend-dot green"></span><span>Selesai (Done)</span></div>
+            <div class="legend-item"><span class="legend-dot grey"></span><span>Belum Dikerjakan</span></div>
+            <div class="legend-item"><span class="legend-dot blue"></span><span>Pos Basecamp</span></div>
+          </div>
+        </div>
+
+        <div class="map-viewport" id="mapViewport">
+          <!-- Active floating badge -->
+          <div class="active-info-floating" id="floatingActiveBadge">
+            <div class="ping-badge"></div>
+            <div class="active-info-text">Posisi: <span id="floatingActiveText">Standby di Pos PPKW</span></div>
+          </div>
+
+          <!-- Floating Map Zoom Controls -->
+          <div class="map-controls-floating">
+            <button class="btn-map-control" id="btnZoomIn" title="Perbesar">+</button>
+            <button class="btn-map-control" id="btnZoomOut" title="Perkecil">−</button>
+            <button class="btn-map-control" id="btnZoomReset" title="Reset Pandangan">⌂</button>
+          </div>
+
+          <!-- SVG Graphic of Turnout Track Route -->
+          <svg class="map-canvas-svg" id="railMapSvg" viewBox="0 0 1100 520" preserveAspectRatio="xMidYMid meet">
+            <defs>
+              <!-- Glowing shadow filters for pins and route -->
+              <filter id="glowRed" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="6" result="blur" />
+                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+              </filter>
+              <filter id="glowGreen" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="5" result="blur" />
+                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+              </filter>
+
+              <!-- Gradient for the thick route path -->
+              <linearGradient id="routeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#b91c1c"/>
+                <stop offset="45%" stop-color="#ef4444"/>
+                <stop offset="70%" stop-color="#f87171"/>
+                <stop offset="100%" stop-color="#dc2626"/>
+              </linearGradient>
+
+              <!-- Radial Pin Glow -->
+              <radialGradient id="pinGlow">
+                <stop offset="0%" stop-color="#ef4444" stop-opacity="0.8"/>
+                <stop offset="100%" stop-color="#ef4444" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+
+            <!-- Background Decorative Grid Lines & Area Labels -->
+            <g opacity="0.15">
+              <line x1="50" y1="130" x2="1050" y2="130" stroke="#ffffff" stroke-dasharray="4 8" stroke-width="1"/>
+              <line x1="50" y1="260" x2="1050" y2="260" stroke="#ffffff" stroke-dasharray="4 8" stroke-width="1"/>
+              <line x1="50" y1="390" x2="1050" y2="390" stroke="#ffffff" stroke-dasharray="4 8" stroke-width="1"/>
+              <line x1="280" y1="40" x2="280" y2="480" stroke="#ffffff" stroke-dasharray="4 8" stroke-width="1"/>
+              <line x1="550" y1="40" x2="550" y2="480" stroke="#ffffff" stroke-dasharray="4 8" stroke-width="1"/>
+              <line x1="820" y1="40" x2="820" y2="480" stroke="#ffffff" stroke-dasharray="4 8" stroke-width="1"/>
+            </g>
+
+            <!-- Area Labels on Map Background -->
+            <text x="130" y="55" fill="#c4b5fd" font-size="13" font-weight="800" letter-spacing="1">ARAH KERTASMAYA (HILIR)</text>
+            <text x="500" y="55" fill="#93c5fd" font-size="13" font-weight="800" letter-spacing="1">EMPLASEMEN STASIUN AWN</text>
+            <text x="860" y="55" fill="#fcd34d" font-size="13" font-weight="800" letter-spacing="1">ARAH BANGODUWA (HULU)</text>
+
+            <!-- Base Track Lines (Emplasemen Double Track representation) -->
+            <path d="M 40 260 L 1060 260" stroke="#334155" stroke-width="6" stroke-dasharray="14 6"/>
+            <path d="M 40 285 L 1060 285" stroke="#334155" stroke-width="6" stroke-dasharray="14 6"/>
+            <path d="M 320 230 L 780 230" stroke="#1e293b" stroke-width="4" stroke-dasharray="8 6"/>
+
+            <!-- THE MAIN CONNECTING RED ROUTE POLYLINE (Matching User's Reference Picture) -->
+            <!-- Connects all waypoints sequentially through Kertasmaya -> Stasiun AWN -> Bangoduwa -->
+            <path id="routePolylineBg" 
+                  d="M 60 200 
+                     C 100 200, 100 130, 140 130 
+                     C 180 130, 180 200, 220 200 
+                     C 250 200, 260 340, 300 340 
+                     C 340 340, 360 200, 400 200 
+                     C 440 200, 460 340, 500 340 
+                     C 530 340, 540 240, 560 240
+                     C 600 240, 620 130, 660 130
+                     C 700 130, 710 210, 740 210
+                     C 770 210, 780 340, 810 340
+                     C 840 340, 850 200, 880 200
+                     C 910 200, 920 130, 950 130
+                     C 980 130, 990 260, 1040 260" 
+                  fill="none" 
+                  stroke="#7f1d1d" 
+                  stroke-width="16" 
+                  stroke-linecap="round" 
+                  stroke-linejoin="round"/>
+
+            <path id="routePolylineMain" 
+                  d="M 60 200 
+                     C 100 200, 100 130, 140 130 
+                     C 180 130, 180 200, 220 200 
+                     C 250 200, 260 340, 300 340 
+                     C 340 340, 360 200, 400 200 
+                     C 440 200, 460 340, 500 340 
+                     C 530 340, 540 240, 560 240
+                     C 600 240, 620 130, 660 130
+                     C 700 130, 710 210, 740 210
+                     C 770 210, 780 340, 810 340
+                     C 840 340, 850 200, 880 200
+                     C 910 200, 920 130, 950 130
+                     C 980 130, 990 260, 1040 260" 
+                  fill="none" 
+                  stroke="url(#routeGradient)" 
+                  stroke-width="10" 
+                  stroke-linecap="round" 
+                  stroke-linejoin="round"
+                  filter="url(#glowRed)"/>
+
+            <path id="routePolylineCore" 
+                  d="M 60 200 
+                     C 100 200, 100 130, 140 130 
+                     C 180 130, 180 200, 220 200 
+                     C 250 200, 260 340, 300 340 
+                     C 340 340, 360 200, 400 200 
+                     C 440 200, 460 340, 500 340 
+                     C 530 340, 540 240, 560 240
+                     C 600 240, 620 130, 660 130
+                     C 700 130, 710 210, 740 210
+                     C 770 210, 780 340, 810 340
+                     C 840 340, 850 200, 880 200
+                     C 910 200, 920 130, 950 130
+                     C 980 130, 990 260, 1040 260" 
+                  fill="none" 
+                  stroke="#fee2e2" 
+                  stroke-width="2.5" 
+                  stroke-dasharray="8 8"
+                  stroke-linecap="round"/>
+
+            <!-- SVG Container for Waypoints & Markers (Dynamically managed by JavaScript) -->
+            <g id="svgWaypointsLayer"></g>
+
+            <!-- Dynamic Walking Officer Avatar Layer -->
+            <g id="svgOfficerAvatarLayer"></g>
+          </svg>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT COLUMN: Interactive Checklist & Activity Log -->
+    <div class="control-column">
+
+      <!-- Action Toolbar (Break Mode & Batch Actions) -->
+      <div class="action-toolbar">
+        <button class="btn-action-main btn-break" id="btnToggleBreak">
+          <span style="font-size: 1.25rem;">☕</span>
+          <span id="breakBtnText">MODE ISTIRAHAT</span>
+        </button>
+
+        <button class="btn-action-main btn-finish-all" id="btnFinishAllSession">
+          <span style="font-size: 1.15rem;">🏁</span>
+          <span>SELESAI DINASAN</span>
+        </button>
+      </div>
+
+      <!-- Turnout Checklist Card -->
+      <div class="checklist-card">
+        <div class="checklist-header">
+          <div class="checklist-title-row">
+            <h3>
+              <span>📋 CEKLIS WESEL & PELACAKAN POSISI</span>
+            </h3>
+            <span style="font-size: 0.78rem; color: var(--text-muted);" id="checklistCountText">16 Titik</span>
+          </div>
+
+          <!-- Filter Navigation Tabs -->
+          <div class="filter-tabs">
+            <button class="filter-tab active" data-filter="all">Semua Wesel (16)</button>
+            <button class="filter-tab" data-filter="bangoduwa">Arah Bangoduwa (9)</button>
+            <button class="filter-tab" data-filter="kertasmaya">Arah Kertasmaya (7)</button>
+            <button class="filter-tab" data-filter="pending">Belum (16)</button>
+            <button class="filter-tab" data-filter="done">Selesai (0)</button>
+          </div>
+        </div>
+
+        <!-- The List of Switches Grid -->
+        <div class="switch-grid" id="switchGridContainer">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+
+      <!-- History & Transition Log Card -->
+      <div class="log-card">
+        <div class="log-header">
+          <h3>
+            <span>📜 RIWAYAT PERPINDAHAN & AKTIVITAS</span>
+          </h3>
+          <div class="log-actions">
+            <button class="btn-log-action" id="btnExportCsv" title="Download Riwayat ke CSV">
+              <span>📥 CSV</span>
+            </button>
+            <button class="btn-log-action" id="btnPrintReport" title="Cetak Laporan PDF">
+              <span>🖨️ Cetak PDF</span>
+            </button>
+            <button class="btn-log-action" id="btnResetHistory" title="Hapus Riwayat Hari Ini" style="color: #f87171;">
+              <span>🗑️ Reset</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="log-table-wrap">
+          <table class="log-table">
+            <thead>
+              <tr>
+                <th>WAKTU</th>
+                <th>POSISI / WESEL</th>
+                <th>ARAH</th>
+                <th>STATUS</th>
+                <th>DURASI</th>
+                <th>PETUGAS</th>
+              </tr>
+            </thead>
+            <tbody id="logTableBody">
+              <tr>
+                <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 20px;">
+                  Belum ada catatan perpindahan. Mulai ceklis wesel di atas untuk mencatat!
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Edit Officer Modal -->
+  <div class="modal-overlay" id="officerModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Ubah Data Petugas Berdinas</h3>
+        <button class="modal-close-btn" id="btnCloseOfficerModal">✕</button>
+      </div>
+      <div class="form-group">
+        <label for="inputOfficerName">Nama Petugas PPKW (Bisa Lebih dari 1 Orang)</label>
+        <input type="text" id="inputOfficerName" class="form-control" placeholder="Contoh: SAMSUDIN / BUDI" value="SAMSUDIN / AHMAD">
+      </div>
+      <div class="form-group">
+        <label for="selectShiftModal">Shift Berdinas</label>
+        <select id="selectShiftModal" class="form-control">
+          <option value="Pagi">Pagi (07:00 - 15:00)</option>
+          <option value="Siang">Siang (15:00 - 23:00)</option>
+          <option value="Malam">Malam (23:00 - 07:00)</option>
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" id="btnCancelOfficerModal">Batal</button>
+        <button class="btn-modal-save" id="btnSaveOfficerModal">Simpan Perubahan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- API / Google Apps Script Cloud Sync Settings Modal -->
+  <div class="modal-overlay" id="apiModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Pengaturan Cloud Sync (Google Sheets)</h3>
+        <button class="modal-close-btn" id="btnCloseApiModal">✕</button>
+      </div>
+      <div class="form-group">
+        <label for="inputGasUrl">URL Google Apps Script Web App</label>
+        <input type="url" id="inputGasUrl" class="form-control" placeholder="https://script.google.com/macros/s/.../exec">
+        <span style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">
+          Masukkan URL Web App hasil deploy Google Apps Script untuk sinkronisasi live ke HP & Komputer.
+        </span>
+      </div>
+      <div class="form-group">
+        <label for="inputPollInterval">Interval Auto-Sync (Detik)</label>
+        <input type="number" id="inputPollInterval" class="form-control" value="5" min="2" max="60">
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" id="btnCancelApiModal">Tutup</button>
+        <button class="btn-modal-save" id="btnSaveApiModal">Simpan & Uji Koneksi</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- JAVASCRIPT APPLICATION CORE -->
+  <script>
+    (function () {
+      'use strict';
+
+      /* =========================================================================
+         1. DATA DEFINITION & SWITCH ROSTER
+         ========================================================================= */
+
+      // 16 Wesel Stasiun Arjawinangun (AWN)
+      // Arah Bangoduwa (9 wesel): 15A, 15B, 27A, 27B, 37A, 37B, 35, 25, 43
+      // Arah Kertasmaya (7 wesel): 11A, 11B, 13, 23A, 23B, 41, 31
+      // Placed sequentially with realistic coordinates along the SVG route polyline (viewBox 0 0 1100 520)
+      const SWITCHES_CONFIG = [
+        // Arah Kertasmaya (Barat / Hilir)
+        { id: '11A', name: 'Wesel 11 A', direction: 'Kertasmaya', x: 60,  y: 200, labelPos: 'top' },
+        { id: '11B', name: 'Wesel 11 B', direction: 'Kertasmaya', x: 140, y: 130, labelPos: 'top' },
+        { id: '13',  name: 'Wesel 13',   direction: 'Kertasmaya', x: 220, y: 200, labelPos: 'bottom' },
+        { id: '23A', name: 'Wesel 23 A', direction: 'Kertasmaya', x: 300, y: 340, labelPos: 'bottom' },
+        { id: '23B', name: 'Wesel 23 B', direction: 'Kertasmaya', x: 350, y: 270, labelPos: 'top' },
+        { id: '41',  name: 'Wesel 41',   direction: 'Kertasmaya', x: 400, y: 200, labelPos: 'top' },
+        { id: '31',  name: 'Wesel 31',   direction: 'Kertasmaya', x: 450, y: 270, labelPos: 'bottom' },
+
+        // Basecamp / Pos PPKW Emplasemen AWN (Mode Istirahat Center)
+        { id: 'POS', name: 'Pos PPKW (Basecamp)', direction: 'Stasiun', x: 545, y: 240, isBasecamp: true, labelPos: 'top' },
+
+        // Arah Bangoduwa (Timur / Hulu)
+        { id: '15A', name: 'Wesel 15 A', direction: 'Bangoduwa', x: 620, y: 170, labelPos: 'top' },
+        { id: '15B', name: 'Wesel 15 B', direction: 'Bangoduwa', x: 660, y: 130, labelPos: 'top' },
+        { id: '27A', name: 'Wesel 27 A', direction: 'Bangoduwa', x: 740, y: 210, labelPos: 'bottom' },
+        { id: '27B', name: 'Wesel 27 B', direction: 'Bangoduwa', x: 780, y: 280, labelPos: 'top' },
+        { id: '37A', name: 'Wesel 37 A', direction: 'Bangoduwa', x: 810, y: 340, labelPos: 'bottom' },
+        { id: '37B', name: 'Wesel 37 B', direction: 'Bangoduwa', x: 850, y: 270, labelPos: 'top' },
+        { id: '35',  name: 'Wesel 35',   direction: 'Bangoduwa', x: 880, y: 200, labelPos: 'top' },
+        { id: '25',  name: 'Wesel 25',   direction: 'Bangoduwa', x: 950, y: 130, labelPos: 'top' },
+        { id: '43',  name: 'Wesel 43',   direction: 'Bangoduwa', x: 1040, y: 260, labelPos: 'bottom' }
+      ];
+
+      const STORAGE_KEY = 'ppkw_tracker_state_v1';
+      const LOG_STORAGE_KEY = 'ppkw_tracker_logs_v1';
+      const SETTINGS_KEY = 'ppkw_tracker_settings_v1';
+
+      // State Object
+      let appState = {
+        petugas: 'SAMSUDIN / PETUGAS PPKW',
+        shift: 'Pagi',
+        posisiAktif: 'Standby di Pos',
+        arah: '-',
+        jamMulaiAktif: null, // Timestamp string or null
+        startTimeEpoch: null, // milliseconds for stopwatch
+        statusIstirahat: false,
+        breakStartTimeEpoch: null,
+        completedSwitches: [], // Array of switch IDs e.g. ['15A', '15B']
+        switchTimes: {}, // { '15A': { startTime: '...', endTime: '...', durationMinutes: 12 } }
+        lastSyncTimestamp: null
+      };
+
+      let activityLogs = [];
+      let appSettings = {
+        gasApiUrl: '',
+        pollIntervalSeconds: 5
+      };
+
+      let activeFilter = 'all';
+      let pollTimer = null;
+      let stopwatchTimer = null;
+
+      /* =========================================================================
+         2. INITIALIZATION & STORAGE ENGINE
+         ========================================================================= */
+
+      function initApp() {
+        loadSettings();
+        loadLocalState();
+        renderDateAndClock();
+        renderOfficerUI();
+        renderMapWaypoints();
+        renderSwitchList();
+        renderLogsTable();
+        updateMetricsAndProgress();
+        startTimers();
+
+        // Check if GAS URL exists, run initial sync
+        if (appSettings.gasApiUrl) {
+          fetchCloudState();
+        }
+
+        bindEventListeners();
+      }
+
+      function loadSettings() {
+        try {
+          const raw = localStorage.getItem(SETTINGS_KEY);
+          if (raw) {
+            appSettings = Object.assign(appSettings, JSON.parse(raw));
+          }
+        } catch (e) {
+          console.warn('Gagal memuat setting:', e);
+        }
+        document.getElementById('inputGasUrl').value = appSettings.gasApiUrl || '';
+        document.getElementById('inputPollInterval').value = appSettings.pollIntervalSeconds || 5;
+      }
+
+      function saveSettings() {
+        localStorage.setItem(SETTINGS_KEY, JSON.stringify(appSettings));
+      }
+
+      function loadLocalState() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            appState = Object.assign(appState, parsed);
+          }
+        } catch (e) {
+          console.warn('Gagal memuat state lokal:', e);
+        }
+
+        try {
+          const rawLogs = localStorage.getItem(LOG_STORAGE_KEY);
+          if (rawLogs) {
+            activityLogs = JSON.parse(rawLogs);
+          }
+        } catch (e) {
+          console.warn('Gagal memuat log lokal:', e);
+        }
+
+        // If no active start time epoch but there is an active position that is not standby
+        if (appState.posisiAktif && appState.posisiAktif !== 'Standby di Pos' && !appState.startTimeEpoch) {
+          appState.startTimeEpoch = Date.now();
+        }
+      }
+
+      function saveLocalState() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+          localStorage.setItem(LOG_STORAGE_KEY, JSON.stringify(activityLogs));
+        } catch (e) {
+          console.warn('Gagal menyimpan state lokal:', e);
+        }
+      }
+
+      /* =========================================================================
+         3. TIMERS & LIVE CLOCK
+         ========================================================================= */
+
+      function startTimers() {
+        // Clock & Stopwatch running every 1 second
+        if (stopwatchTimer) clearInterval(stopwatchTimer);
+        stopwatchTimer = setInterval(() => {
+          renderLiveClock();
+          updateLiveStopwatch();
+        }, 1000);
+
+        // Cloud sync polling
+        startPolling();
+      }
+
+      function startPolling() {
+        if (pollTimer) clearInterval(pollTimer);
+        const interval = Math.max(3, (appSettings.pollIntervalSeconds || 5)) * 1000;
+        pollTimer = setInterval(() => {
+          if (appSettings.gasApiUrl) {
+            fetchCloudState(true);
+          }
+        }, interval);
+      }
+
+      function renderDateAndClock() {
+        const now = new Date();
+        const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
+        document.getElementById('currentDateDisplay').textContent = now.toLocaleDateString('id-ID', options);
+        renderLiveClock();
+      }
+
+      function renderLiveClock() {
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('id-ID', { hour12: false }) + ' WIB';
+        document.getElementById('liveClockDisplay').textContent = timeStr;
+      }
+
+      function updateLiveStopwatch() {
+        const timerElem = document.getElementById('metricDurationTimer');
+        if (!timerElem) return;
+
+        if (appState.statusIstirahat) {
+          if (!appState.breakStartTimeEpoch) appState.breakStartTimeEpoch = Date.now();
+          const elapsedSec = Math.floor((Date.now() - appState.breakStartTimeEpoch) / 1000);
+          timerElem.textContent = formatDuration(elapsedSec);
+          timerElem.style.color = '#f59e0b';
+          return;
+        }
+
+        if (!appState.startTimeEpoch || appState.posisiAktif === 'Standby di Pos') {
+          timerElem.textContent = '00:00:00';
+          timerElem.style.color = '#94a3b8';
+          return;
+        }
+
+        const elapsedSec = Math.floor((Date.now() - appState.startTimeEpoch) / 1000);
+        timerElem.textContent = formatDuration(elapsedSec);
+        timerElem.style.color = '#fbbf24';
+      }
+
+      function formatDuration(totalSeconds) {
+        if (isNaN(totalSeconds) || totalSeconds < 0) totalSeconds = 0;
+        const hrs = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
+        const mins = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
+        const secs = String(totalSeconds % 60).padStart(2, '0');
+        return `${hrs}:${mins}:${secs}`;
+      }
+
+      function getNowTimeStr() {
+        return new Date().toLocaleTimeString('id-ID', { hour12: false });
+      }
+
+      /* =========================================================================
+         4. SVG MAP RENDERING & INTERACTIVE PINS (Inspired by Reference Image)
+         ========================================================================= */
+
+      function renderMapWaypoints() {
+        const layer = document.getElementById('svgWaypointsLayer');
+        if (!layer) return;
+        layer.innerHTML = '';
+
+        SWITCHES_CONFIG.forEach(cfg => {
+          const isDone = appState.completedSwitches.includes(cfg.id);
+          const isActive = appState.posisiAktif === cfg.name || (cfg.isBasecamp && appState.statusIstirahat);
+
+          // Group wrapper
+          const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+          g.setAttribute('class', 'map-waypoint-node');
+          g.setAttribute('data-id', cfg.id);
+          g.setAttribute('style', 'cursor: pointer;');
+
+          // Tooltip / Click action
+          g.addEventListener('click', () => {
+            handleWaypointClick(cfg);
+          });
+
+          // Pin Graphics:
+          if (cfg.isBasecamp) {
+            // Basecamp / Pos PPKW Graphic
+            renderBasecampNode(g, cfg, isActive);
+          } else if (isActive) {
+            // BIG RED PULSING PIN (Matching Boerum St pin in reference image!)
+            renderActivePinNode(g, cfg);
+          } else if (isDone) {
+            // GREEN PIN (Done)
+            renderDonePinNode(g, cfg);
+          } else {
+            // NEUTRAL GREY PIN (Pending)
+            renderPendingPinNode(g, cfg);
+          }
+
+          layer.appendChild(g);
+        });
+
+        // Update Officer Avatar position on the map
+        renderOfficerAvatarOnMap();
+      }
+
+      function renderBasecampNode(g, cfg, isActive) {
+        // Basecamp Circle & Icon
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('cx', cfg.x);
+        circle.setAttribute('cy', cfg.y);
+        circle.setAttribute('r', isActive ? '24' : '18');
+        circle.setAttribute('fill', isActive ? '#f59e0b' : '#1e293b');
+        circle.setAttribute('stroke', '#3b82f6');
+        circle.setAttribute('stroke-width', '3');
+        if (isActive) circle.setAttribute('filter', 'url(#glowRed)');
+        g.appendChild(circle);
+
+        const textIcon = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        textIcon.setAttribute('x', cfg.x);
+        textIcon.setAttribute('y', cfg.y + 5);
+        textIcon.setAttribute('text-anchor', 'middle');
+        textIcon.setAttribute('font-size', '14');
+        textIcon.textContent = '☕';
+        g.appendChild(textIcon);
+
+        // Label
+        const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        label.setAttribute('x', cfg.x);
+        label.setAttribute('y', cfg.y - 24);
+        label.setAttribute('text-anchor', 'middle');
+        label.setAttribute('font-size', '11');
+        label.setAttribute('font-weight', '800');
+        label.setAttribute('fill', '#93c5fd');
+        label.textContent = 'POS PPKW';
+        g.appendChild(label);
+      }
+
+      function renderActivePinNode(g, cfg) {
+        // Outer Pulsing Radar Ring
+        const pulseCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        pulseCircle.setAttribute('cx', cfg.x);
+        pulseCircle.setAttribute('cy', cfg.y);
+        pulseCircle.setAttribute('r', '28');
+        pulseCircle.setAttribute('fill', 'rgba(239, 68, 68, 0.25)');
+        pulseCircle.setAttribute('stroke', '#ef4444');
+        pulseCircle.setAttribute('stroke-width', '2');
+
+        const anim = document.createElementNS('http://www.w3.org/2000/svg', 'animate');
+        anim.setAttribute('attributeName', 'r');
+        anim.setAttribute('values', '20;36;20');
+        anim.setAttribute('dur', '1.8s');
+        anim.setAttribute('repeatCount', 'indefinite');
+        pulseCircle.appendChild(anim);
+        g.appendChild(pulseCircle);
+
+        // Big Red Pin (Teardrop SVG Map Marker style from reference image)
+        const pinPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        // Teardrop path anchored at (cfg.x, cfg.y)
+        const d = `M ${cfg.x} ${cfg.y} 
+                   C ${cfg.x - 18} ${cfg.y - 24}, ${cfg.x - 18} ${cfg.y - 48}, ${cfg.x} ${cfg.y - 48} 
+                   C ${cfg.x + 18} ${cfg.y - 48}, ${cfg.x + 18} ${cfg.y - 24}, ${cfg.x} ${cfg.y} Z`;
+        pinPath.setAttribute('d', d);
+        pinPath.setAttribute('fill', '#ef4444');
+        pinPath.setAttribute('stroke', '#ffffff');
+        pinPath.setAttribute('stroke-width', '2.5');
+        pinPath.setAttribute('filter', 'url(#glowRed)');
+        g.appendChild(pinPath);
+
+        // White Center Hole inside Big Pin
+        const centerCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        centerCircle.setAttribute('cx', cfg.x);
+        centerCircle.setAttribute('cy', cfg.y - 32);
+        centerCircle.setAttribute('r', '7');
+        centerCircle.setAttribute('fill', '#000000');
+        g.appendChild(centerCircle);
+
+        // Switch Name Label Badge
+        const labelText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        labelText.setAttribute('x', cfg.x);
+        labelText.setAttribute('y', cfg.y + 22);
+        labelText.setAttribute('text-anchor', 'middle');
+        labelText.setAttribute('font-size', '12');
+        labelText.setAttribute('font-weight', '900');
+        labelText.setAttribute('fill', '#ffffff');
+        labelText.setAttribute('filter', 'drop-shadow(0px 2px 4px rgba(0,0,0,0.8))');
+        labelText.textContent = cfg.id;
+        g.appendChild(labelText);
+      }
+
+      function renderDonePinNode(g, cfg) {
+        // Green Destination Pin (Matching Grand St pin from reference image)
+        const pinPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        const d = `M ${cfg.x} ${cfg.y} 
+                   C ${cfg.x - 12} ${cfg.y - 16}, ${cfg.x - 12} ${cfg.y - 32}, ${cfg.x} ${cfg.y - 32} 
+                   C ${cfg.x + 12} ${cfg.y - 32}, ${cfg.x + 12} ${cfg.y - 16}, ${cfg.x} ${cfg.y} Z`;
+        pinPath.setAttribute('d', d);
+        pinPath.setAttribute('fill', '#10b981');
+        pinPath.setAttribute('stroke', '#ffffff');
+        pinPath.setAttribute('stroke-width', '2');
+        pinPath.setAttribute('filter', 'url(#glowGreen)');
+        g.appendChild(pinPath);
+
+        // Inner Checkmark Circle
+        const checkCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        checkCircle.setAttribute('cx', cfg.x);
+        checkCircle.setAttribute('cy', cfg.y - 21);
+        checkCircle.setAttribute('r', '5');
+        checkCircle.setAttribute('fill', '#ffffff');
+        g.appendChild(checkCircle);
+
+        // Label
+        const labelText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        labelText.setAttribute('x', cfg.x);
+        labelText.setAttribute('y', cfg.y + 18);
+        labelText.setAttribute('text-anchor', 'middle');
+        labelText.setAttribute('font-size', '10');
+        labelText.setAttribute('font-weight', '700');
+        labelText.setAttribute('fill', '#6ee7b7');
+        labelText.textContent = cfg.id;
+        g.appendChild(labelText);
+      }
+
+      function renderPendingPinNode(g, cfg) {
+        // Small White/Grey Node on Track
+        const halo = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        halo.setAttribute('cx', cfg.x);
+        halo.setAttribute('cy', cfg.y);
+        halo.setAttribute('r', '10');
+        halo.setAttribute('fill', 'rgba(255, 255, 255, 0.15)');
+        halo.setAttribute('stroke', '#64748b');
+        halo.setAttribute('stroke-width', '1.5');
+        g.appendChild(halo);
+
+        const innerDot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        innerDot.setAttribute('cx', cfg.x);
+        innerDot.setAttribute('cy', cfg.y);
+        innerDot.setAttribute('r', '4');
+        innerDot.setAttribute('fill', '#ffffff');
+        g.appendChild(innerDot);
+
+        // Label
+        const labelText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        labelText.setAttribute('x', cfg.x);
+        labelText.setAttribute('y', cfg.labelPos === 'top' ? cfg.y - 14 : cfg.y + 20);
+        labelText.setAttribute('text-anchor', 'middle');
+        labelText.setAttribute('font-size', '10');
+        labelText.setAttribute('font-weight', '700');
+        labelText.setAttribute('fill', '#94a3b8');
+        labelText.textContent = cfg.id;
+        g.appendChild(labelText);
+      }
+
+      function renderOfficerAvatarOnMap() {
+        const avatarLayer = document.getElementById('svgOfficerAvatarLayer');
+        if (!avatarLayer) return;
+        avatarLayer.innerHTML = '';
+
+        // Find active config
+        let activeCfg = null;
+        if (appState.statusIstirahat) {
+          activeCfg = SWITCHES_CONFIG.find(c => c.isBasecamp);
+        } else {
+          activeCfg = SWITCHES_CONFIG.find(c => c.name === appState.posisiAktif);
+        }
+
+        if (!activeCfg) return;
+
+        // Officer Stick Figure Walking Avatar (from reference image)
+        const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        const posX = activeCfg.x + 28;
+        const posY = activeCfg.y - 12;
+
+        g.setAttribute('transform', `translate(${posX}, ${posY})`);
+
+        // Badge pill background behind officer icon
+        const bgPill = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        bgPill.setAttribute('x', '-14');
+        bgPill.setAttribute('y', '-28');
+        bgPill.setAttribute('width', '28');
+        bgPill.setAttribute('height', '34');
+        bgPill.setAttribute('rx', '8');
+        bgPill.setAttribute('fill', '#0f172a');
+        bgPill.setAttribute('stroke', '#3b82f6');
+        bgPill.setAttribute('stroke-width', '1.5');
+        g.appendChild(bgPill);
+
+        // Stick figure walking emoji / text
+        const walkerText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        walkerText.setAttribute('x', '0');
+        walkerText.setAttribute('y', '-6');
+        walkerText.setAttribute('text-anchor', 'middle');
+        walkerText.setAttribute('font-size', '20');
+        walkerText.textContent = appState.statusIstirahat ? '☕' : '🚶';
+
+        // Add subtle bounce animation to the walking stick figure
+        const anim = document.createElementNS('http://www.w3.org/2000/svg', 'animateTransform');
+        anim.setAttribute('attributeName', 'transform');
+        anim.setAttribute('type', 'translate');
+        anim.setAttribute('values', '0,0; 0,-4; 0,0');
+        anim.setAttribute('dur', '1.2s');
+        anim.setAttribute('repeatCount', 'indefinite');
+        walkerText.appendChild(anim);
+
+        g.appendChild(walkerText);
+        avatarLayer.appendChild(g);
+      }
+
+      /* =========================================================================
+         5. CHECKLIST UI & CARD GENERATOR
+         ========================================================================= */
+
+      function renderSwitchList() {
+        const container = document.getElementById('switchGridContainer');
+        if (!container) return;
+        container.innerHTML = '';
+
+        // Exclude basecamp from normal switch checklist cards
+        const operationalSwitches = SWITCHES_CONFIG.filter(c => !c.isBasecamp);
+
+        // Filter items
+        const filtered = operationalSwitches.filter(c => {
+          const isDone = appState.completedSwitches.includes(c.id);
+          if (activeFilter === 'all') return true;
+          if (activeFilter === 'bangoduwa') return c.direction === 'Bangoduwa';
+          if (activeFilter === 'kertasmaya') return c.direction === 'Kertasmaya';
+          if (activeFilter === 'pending') return !isDone;
+          if (activeFilter === 'done') return isDone;
+          return true;
+        });
+
+        document.getElementById('checklistCountText').textContent = `${filtered.length} Titik Ditampilkan`;
+
+        if (filtered.length === 0) {
+          container.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 30px;">
+              Tidak ada wesel pada kategori ini.
+            </div>
+          `;
+          return;
+        }
+
+        filtered.forEach(cfg => {
+          const isDone = appState.completedSwitches.includes(cfg.id);
+          const isActive = appState.posisiAktif === cfg.name && !appState.statusIstirahat;
+          const timing = appState.switchTimes[cfg.id] || null;
+
+          const card = document.createElement('div');
+          card.className = `switch-item-card ${isActive ? 'is-active' : ''} ${isDone ? 'is-done' : ''}`;
+          card.id = `card-switch-${cfg.id}`;
+
+          const dirClass = cfg.direction === 'Bangoduwa' ? 'badge-bdw' : 'badge-ktm';
+
+          let statusBadge = '<span class="switch-status-pill status-pending">⚪ Belum Dikerjakan</span>';
+          if (isActive) {
+            statusBadge = '<span class="switch-status-pill status-active">📍 SEDANG DIBERSIHKAN</span>';
+          } else if (isDone) {
+            statusBadge = '<span class="switch-status-pill status-done">🟢 Selesai Dibersihkan</span>';
+          }
+
+          let timeInfoHtml = '';
+          if (timing) {
+            timeInfoHtml = `
+              <div class="switch-card-time">
+                <div class="time-row"><span>Mulai:</span> <b>${timing.startTime || '-'}</b></div>
+                <div class="time-row"><span>Selesai:</span> <b>${timing.endTime || '-'}</b></div>
+                <div class="time-row" style="color: #6ee7b7;"><span>Durasi:</span> <b>${timing.durationMinutes || 0} Menit</b></div>
+              </div>
+            `;
+          } else if (isActive) {
+            timeInfoHtml = `
+              <div class="switch-card-time">
+                <div class="time-row"><span>Waktu Mulai:</span> <b>${appState.jamMulaiAktif || '-'}</b></div>
+                <div class="time-row" style="color: #f59e0b;"><span>Status:</span> <b>Sedang Berlangsung...</b></div>
+              </div>
+            `;
+          }
+
+          card.innerHTML = `
+            <div class="switch-card-header">
+              <div class="switch-number">
+                <span>${cfg.name}</span>
+                <span class="badge-direction ${dirClass}">${cfg.direction}</span>
+              </div>
+              ${statusBadge}
+            </div>
+
+            ${timeInfoHtml}
+
+            <div class="switch-actions">
+              ${!isActive ? `
+                <button class="btn-switch-action btn-set-active" onclick="window.PPKW.setActivePosition('${cfg.id}')">
+                  <span>📍 Mulai Bersihkan</span>
+                </button>
+              ` : `
+                <button class="btn-switch-action btn-set-done" onclick="window.PPKW.markDone('${cfg.id}')">
+                  <span>✅ Tandai Selesai</span>
+                </button>
+              `}
+
+              ${isDone ? `
+                <button class="btn-switch-action btn-reset-single" title="Ulangi Ceklis Wesel Ini" onclick="window.PPKW.resetSingle('${cfg.id}')">
+                  ↺
+                </button>
+              ` : ''}
+            </div>
+          `;
+
+          container.appendChild(card);
+        });
+      }
+
+      /* =========================================================================
+         6. CORE ACTIONS: SET ACTIVE, MARK DONE, BREAK MODE
+         ========================================================================= */
+
+      function setActivePosition(switchId) {
+        const target = SWITCHES_CONFIG.find(c => c.id === switchId);
+        if (!target) return;
+
+        // If currently on another switch, log transition from previous switch
+        const nowTimeStr = getNowTimeStr();
+        const prevPosition = appState.posisiAktif;
+        let prevDurationMinutes = 0;
+
+        if (appState.startTimeEpoch && prevPosition && prevPosition !== 'Standby di Pos' && prevPosition !== target.name) {
+          prevDurationMinutes = Math.max(1, Math.round((Date.now() - appState.startTimeEpoch) / 60000));
+        }
+
+        // If returning from break
+        if (appState.statusIstirahat) {
+          appState.statusIstirahat = false;
+          appState.breakStartTimeEpoch = null;
+        }
+
+        // Update state
+        appState.posisiAktif = target.name;
+        appState.arah = target.direction;
+        appState.jamMulaiAktif = nowTimeStr;
+        appState.startTimeEpoch = Date.now();
+
+        // Record to Activity Log
+        const logEntry = {
+          jamPindah: nowTimeStr,
+          dariPosisi: prevPosition || 'Standby',
+          kePosisi: target.name,
+          arah: target.direction,
+          status: 'Mulai Bersihkan',
+          durasiMenit: prevDurationMinutes,
+          petugas: appState.petugas
+        };
+        addLogEntry(logEntry);
+
+        saveLocalState();
+        renderAllUI();
+        showToast(`📍 Posisi Aktif: ${target.name} (${target.direction})`);
+
+        // Sync with Cloud
+        syncWithCloud({
+          petugas: appState.petugas,
+          shift: appState.shift,
+          posisiAktif: appState.posisiAktif,
+          arah: appState.arah,
+          jamMulaiAktif: appState.jamMulaiAktif,
+          statusIstirahat: appState.statusIstirahat,
+          completedSwitches: appState.completedSwitches,
+          logEntry: {
+            jamPindah: nowTimeStr,
+            arah: target.direction,
+            weselLokasi: target.name,
+            aksiStatus: 'Mulai Bersihkan',
+            durasiMenit: prevDurationMinutes,
+            catatan: `Pindah dari ${prevPosition}`
+          }
+        });
+      }
+
+      function markDone(switchId) {
+        const target = SWITCHES_CONFIG.find(c => c.id === switchId);
+        if (!target) return;
+
+        const nowTimeStr = getNowTimeStr();
+        let durationMinutes = 1;
+        if (appState.startTimeEpoch) {
+          durationMinutes = Math.max(1, Math.round((Date.now() - appState.startTimeEpoch) / 60000));
+        }
+
+        if (!appState.completedSwitches.includes(switchId)) {
+          appState.completedSwitches.push(switchId);
+        }
+
+        appState.switchTimes[switchId] = {
+          startTime: appState.jamMulaiAktif || nowTimeStr,
+          endTime: nowTimeStr,
+          durationMinutes: durationMinutes
+        };
+
+        // Add log
+        const logEntry = {
+          jamPindah: nowTimeStr,
+          dariPosisi: target.name,
+          kePosisi: target.name,
+          arah: target.direction,
+          status: 'Selesai Dibersihkan',
+          durasiMenit: durationMinutes,
+          petugas: appState.petugas
+        };
+        addLogEntry(logEntry);
+
+        // Find next pending switch in the same direction or any direction
+        const nextPending = SWITCHES_CONFIG.filter(c => !c.isBasecamp).find(c => !appState.completedSwitches.includes(c.id));
+
+        if (nextPending) {
+          appState.posisiAktif = nextPending.name;
+          appState.arah = nextPending.direction;
+          appState.jamMulaiAktif = nowTimeStr;
+          appState.startTimeEpoch = Date.now();
+          showToast(`✅ ${target.name} Selesai! Otomatis lanjut ke ${nextPending.name}`);
+        } else {
+          appState.posisiAktif = 'Semua Wesel Selesai';
+          appState.arah = '-';
+          appState.startTimeEpoch = null;
+          showToast(`🎉 Luar biasa! Seluruh 16 wesel Stasiun AWN telah selesai dibersihkan.`);
+        }
+
+        saveLocalState();
+        renderAllUI();
+
+        // Sync with Cloud
+        syncWithCloud({
+          petugas: appState.petugas,
+          shift: appState.shift,
+          posisiAktif: appState.posisiAktif,
+          arah: appState.arah,
+          jamMulaiAktif: appState.jamMulaiAktif,
+          statusIstirahat: appState.statusIstirahat,
+          completedSwitches: appState.completedSwitches,
+          logEntry: {
+            jamPindah: nowTimeStr,
+            arah: target.direction,
+            weselLokasi: target.name,
+            aksiStatus: 'Selesai Dibersihkan',
+            durasiMenit: durationMinutes,
+            catatan: `Selesai dalam ${durationMinutes} menit`
+          }
+        });
+      }
+
+      function resetSingle(switchId) {
+        appState.completedSwitches = appState.completedSwitches.filter(id => id !== switchId);
+        delete appState.switchTimes[switchId];
+        saveLocalState();
+        renderAllUI();
+        showToast(`Ceklis ${switchId} direset.`);
+        syncWithCloud();
+      }
+
+      function toggleBreakMode() {
+        const nowTimeStr = getNowTimeStr();
+
+        if (!appState.statusIstirahat) {
+          // Enter break
+          let prevDuration = 0;
+          if (appState.startTimeEpoch) {
+            prevDuration = Math.max(1, Math.round((Date.now() - appState.startTimeEpoch) / 60000));
+          }
+
+          appState.statusIstirahat = true;
+          appState.breakStartTimeEpoch = Date.now();
+          const prevPosition = appState.posisiAktif;
+          appState.posisiAktif = 'Istirahat di Pos PPKW';
+          appState.arah = 'Pos PPKW';
+
+          addLogEntry({
+            jamPindah: nowTimeStr,
+            dariPosisi: prevPosition,
+            kePosisi: 'Pos PPKW',
+            arah: 'Basecamp',
+            status: 'Mulai Istirahat ☕',
+            durasiMenit: prevDuration,
+            petugas: appState.petugas
+          });
+
+          showToast('☕ Mode Istirahat Aktif. Posisi dipindahkan ke Pos PPKW.');
+        } else {
+          // Exit break
+          let breakDuration = 1;
+          if (appState.breakStartTimeEpoch) {
+            breakDuration = Math.max(1, Math.round((Date.now() - appState.breakStartTimeEpoch) / 60000));
+          }
+
+          appState.statusIstirahat = false;
+          appState.breakStartTimeEpoch = null;
+          appState.posisiAktif = 'Standby di Pos';
+          appState.arah = '-';
+          appState.startTimeEpoch = null;
+
+          addLogEntry({
+            jamPindah: nowTimeStr,
+            dariPosisi: 'Pos PPKW',
+            kePosisi: 'Standby di Pos',
+            arah: '-',
+            status: 'Selesai Istirahat',
+            durasiMenit: breakDuration,
+            petugas: appState.petugas
+          });
+
+          showToast('▶️ Istirahat Selesai. Silakan pilih wesel berikutnya.');
+        }
+
+        saveLocalState();
+        renderAllUI();
+
+        syncWithCloud({
+          petugas: appState.petugas,
+          shift: appState.shift,
+          posisiAktif: appState.posisiAktif,
+          arah: appState.arah,
+          jamMulaiAktif: nowTimeStr,
+          statusIstirahat: appState.statusIstirahat,
+          completedSwitches: appState.completedSwitches,
+          logEntry: {
+            jamPindah: nowTimeStr,
+            arah: appState.arah,
+            weselLokasi: 'Pos PPKW',
+            aksiStatus: appState.statusIstirahat ? 'Mulai Istirahat' : 'Selesai Istirahat',
+            durasiMenit: 0,
+            catatan: appState.statusIstirahat ? 'Rehat kerja' : 'Kembali dinas'
+          }
+        });
+      }
+
+      function finishAllSession() {
+        if (!confirm('Apakah seluruh rangkaian pembersihan wesel shift ini telah selesai?')) return;
+
+        const nowTimeStr = getNowTimeStr();
+        addLogEntry({
+          jamPindah: nowTimeStr,
+          dariPosisi: appState.posisiAktif,
+          kePosisi: 'Dinasan Ditutup',
+          arah: '-',
+          status: '🏁 Selesai Seluruh Dinasan',
+          durasiMenit: 0,
+          petugas: appState.petugas
+        });
+
+        appState.posisiAktif = 'Dinasan Selesai';
+        appState.arah = '-';
+        appState.startTimeEpoch = null;
+        appState.statusIstirahat = false;
+
+        saveLocalState();
+        renderAllUI();
+        showToast('🏁 Dinasan pembersihan wesel berhasil ditutup.');
+        syncWithCloud();
+      }
+
+      function handleWaypointClick(cfg) {
+        if (cfg.isBasecamp) {
+          toggleBreakMode();
+          return;
+        }
+
+        const isDone = appState.completedSwitches.includes(cfg.id);
+        const isActive = appState.posisiAktif === cfg.name;
+
+        if (isActive) {
+          markDone(cfg.id);
+        } else if (isDone) {
+          if (confirm(`${cfg.name} sudah selesai. Ingin mengulangi pengerjaan wesel ini?`)) {
+            resetSingle(cfg.id);
+            setActivePosition(cfg.id);
+          }
+        } else {
+          setActivePosition(cfg.id);
+        }
+      }
+
+      /* =========================================================================
+         7. METRICS, LOGS & UI RE-RENDER
+         ========================================================================= */
+
+      function renderAllUI() {
+        renderOfficerUI();
+        renderMapWaypoints();
+        renderSwitchList();
+        renderLogsTable();
+        updateMetricsAndProgress();
+      }
+
+      function renderOfficerUI() {
+        document.getElementById('officerNameDisplay').textContent = appState.petugas || 'SAMSUDIN / PETUGAS PPKW';
+
+        // Shift selector chips
+        document.querySelectorAll('.shift-chip').forEach(chip => {
+          chip.classList.toggle('active', chip.getAttribute('data-shift') === appState.shift);
+        });
+
+        // Break button state
+        const breakBtn = document.getElementById('btnToggleBreak');
+        const breakText = document.getElementById('breakBtnText');
+        if (appState.statusIstirahat) {
+          breakBtn.classList.add('active-break');
+          breakText.textContent = 'KEMBALI BEKERJA';
+          document.getElementById('avatarDisplay').textContent = '☕';
+        } else {
+          breakBtn.classList.remove('active-break');
+          breakText.textContent = 'MODE ISTIRAHAT';
+          document.getElementById('avatarDisplay').textContent = '🚶';
+        }
+      }
+
+      function updateMetricsAndProgress() {
+        const targetLabel = document.getElementById('activePositionLabel');
+        const dirLabel = document.getElementById('metricDirectionLabel');
+        const progressRatio = document.getElementById('metricProgressRatio');
+        const progressFill = document.getElementById('progressFillBar');
+        const progressPercent = document.getElementById('progressPercentageText');
+        const floatingActiveText = document.getElementById('floatingActiveText');
+
+        targetLabel.textContent = appState.posisiAktif || 'STANDBY DI POS';
+        dirLabel.textContent = appState.arah || '-';
+        floatingActiveText.textContent = appState.posisiAktif || 'Standby';
+
+        const totalOperational = SWITCHES_CONFIG.filter(c => !c.isBasecamp).length; // 16
+        const doneCount = appState.completedSwitches.length;
+        const percent = Math.round((doneCount / totalOperational) * 100);
+
+        progressRatio.textContent = `${doneCount} / ${totalOperational}`;
+        progressFill.style.width = `${percent}%`;
+        progressPercent.textContent = `${percent}% Selesai`;
+      }
+
+      function addLogEntry(entry) {
+        activityLogs.unshift(entry);
+        if (activityLogs.length > 80) activityLogs.pop();
+        saveLocalState();
+        renderLogsTable();
+      }
+
+      function renderLogsTable() {
+        const tbody = document.getElementById('logTableBody');
+        if (!tbody) return;
+
+        if (activityLogs.length === 0) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 20px;">
+                Belum ada catatan perpindahan. Mulai ceklis wesel di atas untuk mencatat!
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        tbody.innerHTML = activityLogs.map(l => `
+          <tr>
+            <td style="font-family: var(--font-mono); font-weight: 700; color: #fbbf24;">${l.jamPindah || '-'}</td>
+            <td style="font-weight: 800; color: #ffffff;">${l.kePosisi || l.dariPosisi || '-'}</td>
+            <td><span class="badge-direction ${l.arah === 'Bangoduwa' ? 'badge-bdw' : 'badge-ktm'}">${l.arah || '-'}</span></td>
+            <td>${formatStatusBadge(l.status)}</td>
+            <td style="font-family: var(--font-mono); color: #6ee7b7;">${l.durasiMenit ? l.durasiMenit + ' Menit' : '-'}</td>
+            <td style="color: #94a3b8;">${l.petugas || '-'}</td>
+          </tr>
+        `).join('');
+      }
+
+      function formatStatusBadge(status) {
+        if (!status) return '-';
+        if (status.includes('Selesai')) {
+          return '<span style="color: #10b981; font-weight: 700;">🟢 ' + status + '</span>';
+        } else if (status.includes('Mulai')) {
+          return '<span style="color: #ef4444; font-weight: 700;">📍 ' + status + '</span>';
+        } else if (status.includes('Istirahat')) {
+          return '<span style="color: #f59e0b; font-weight: 700;">☕ ' + status + '</span>';
+        }
+        return status;
+      }
+
+      /* =========================================================================
+         8. REALTIME CLOUD SYNC ENGINE (HP ⇄ KOMPUTER)
+         ========================================================================= */
+
+      function syncWithCloud(customPayload) {
+        if (!appSettings.gasApiUrl) {
+          return; // Running locally without API URL configured yet
+        }
+
+        const badge = document.getElementById('syncStatusBadge');
+        const badgeText = document.getElementById('syncStatusText');
+        badge.classList.add('syncing');
+        badgeText.textContent = 'Menyinkronkan...';
+
+        const payload = customPayload || {
+          petugas: appState.petugas,
+          shift: appState.shift,
+          posisiAktif: appState.posisiAktif,
+          arah: appState.arah,
+          jamMulaiAktif: appState.jamMulaiAktif,
+          statusIstirahat: appState.statusIstirahat,
+          completedSwitches: appState.completedSwitches
+        };
+
+        fetch(appSettings.gasApiUrl, {
+          method: 'POST',
+          mode: 'no-cors', // Standard Google Apps Script cross-origin post
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'syncPpkwTracker',
+            payload: payload
+          })
+        })
+        .then(() => {
+          setTimeout(() => {
+            badge.classList.remove('syncing');
+            badgeText.textContent = 'Tersinkron Real-time (HP ⇄ PC)';
+          }, 600);
+        })
+        .catch(err => {
+          console.warn('Sync error:', err);
+          badge.classList.remove('syncing');
+          badgeText.textContent = 'Mode Offline (Lokal Aktif)';
+        });
+      }
+
+      function fetchCloudState(isSilent) {
+        if (!appSettings.gasApiUrl) return;
+
+        const url = appSettings.gasApiUrl + (appSettings.gasApiUrl.includes('?') ? '&' : '?') + 'action=getPpkwTracker';
+
+        fetch(url)
+          .then(res => res.json())
+          .then(data => {
+            if (data && data.success && data.state) {
+              const cloud = data.state;
+
+              // Check if cloud position is different from current local
+              const isDifferent = (cloud.posisiAktif !== appState.posisiAktif) ||
+                                  (cloud.statusIstirahat === 'Ya' !== appState.statusIstirahat) ||
+                                  (cloud.completedSwitches && cloud.completedSwitches.length !== appState.completedSwitches.length);
+
+              if (isDifferent) {
+                appState.petugas = cloud.petugas || appState.petugas;
+                appState.shift = cloud.shift || appState.shift;
+                appState.posisiAktif = cloud.posisiAktif || appState.posisiAktif;
+                appState.arah = cloud.arah || appState.arah;
+                appState.jamMulaiAktif = cloud.jamMulaiAktif || appState.jamMulaiAktif;
+                appState.statusIstirahat = (cloud.statusIstirahat === 'Ya');
+                appState.completedSwitches = cloud.completedSwitches || appState.completedSwitches;
+
+                if (data.logs && Array.isArray(data.logs) && data.logs.length > 0) {
+                  // Merge remote logs
+                  activityLogs = data.logs.map(l => ({
+                    jamPindah: l.jamPindah,
+                    dariPosisi: l.weselLokasi,
+                    kePosisi: l.weselLokasi,
+                    arah: l.arah,
+                    status: l.aksiStatus,
+                    durasiMenit: l.durasiMenit,
+                    petugas: l.petugas
+                  }));
+                }
+
+                saveLocalState();
+                renderAllUI();
+                if (!isSilent) showToast(`🔄 Data disinkronkan dari perangkat lain: ${cloud.posisiAktif}`);
+              }
+            }
+          })
+          .catch(err => {
+            // Quiet fail during background poll
+            if (!isSilent) console.warn('Fetch state error:', err);
+          });
+      }
+
+      /* =========================================================================
+         9. EVENT LISTENERS & MODAL CONTROLLERS
+         ========================================================================= */
+
+      function bindEventListeners() {
+        // Shift selector chips
+        document.querySelectorAll('.shift-chip').forEach(chip => {
+          chip.addEventListener('click', () => {
+            const newShift = chip.getAttribute('data-shift');
+            appState.shift = newShift;
+            saveLocalState();
+            renderOfficerUI();
+            showToast(`Shift diubah ke: ${newShift}`);
+            syncWithCloud();
+          });
+        });
+
+        // Filter tabs
+        document.querySelectorAll('.filter-tab').forEach(tab => {
+          tab.addEventListener('click', () => {
+            document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            activeFilter = tab.getAttribute('data-filter');
+            renderSwitchList();
+          });
+        });
+
+        // Break & Finish session buttons
+        document.getElementById('btnToggleBreak').addEventListener('click', toggleBreakMode);
+        document.getElementById('btnFinishAllSession').addEventListener('click', finishAllSession);
+
+        // Map Zoom Controls
+        let mapZoom = 1;
+        const mapSvg = document.getElementById('railMapSvg');
+        document.getElementById('btnZoomIn').addEventListener('click', () => {
+          mapZoom = Math.min(mapZoom + 0.2, 2.2);
+          mapSvg.style.transform = `scale(${mapZoom})`;
+          mapSvg.style.transformOrigin = 'center center';
+        });
+        document.getElementById('btnZoomOut').addEventListener('click', () => {
+          mapZoom = Math.max(mapZoom - 0.2, 0.7);
+          mapSvg.style.transform = `scale(${mapZoom})`;
+          mapSvg.style.transformOrigin = 'center center';
+        });
+        document.getElementById('btnZoomReset').addEventListener('click', () => {
+          mapZoom = 1;
+          mapSvg.style.transform = 'scale(1)';
+        });
+
+        // Officer Modal
+        const officerModal = document.getElementById('officerModal');
+        document.getElementById('btnEditOfficer').addEventListener('click', () => {
+          document.getElementById('inputOfficerName').value = appState.petugas;
+          document.getElementById('selectShiftModal').value = appState.shift;
+          officerModal.classList.add('active');
+        });
+        document.getElementById('btnCloseOfficerModal').addEventListener('click', () => officerModal.classList.remove('active'));
+        document.getElementById('btnCancelOfficerModal').addEventListener('click', () => officerModal.classList.remove('active'));
+        document.getElementById('btnSaveOfficerModal').addEventListener('click', () => {
+          const val = document.getElementById('inputOfficerName').value.trim();
+          if (val) appState.petugas = val;
+          appState.shift = document.getElementById('selectShiftModal').value;
+          saveLocalState();
+          renderOfficerUI();
+          officerModal.classList.remove('active');
+          showToast('Data Petugas berhasil disimpan.');
+          syncWithCloud();
+        });
+
+        // API Settings Modal
+        const apiModal = document.getElementById('apiModal');
+        document.getElementById('btnApiSettings').addEventListener('click', () => {
+          document.getElementById('inputGasUrl').value = appSettings.gasApiUrl || '';
+          document.getElementById('inputPollInterval').value = appSettings.pollIntervalSeconds || 5;
+          apiModal.classList.add('active');
+        });
+        document.getElementById('btnCloseApiModal').addEventListener('click', () => apiModal.classList.remove('active'));
+        document.getElementById('btnCancelApiModal').addEventListener('click', () => apiModal.classList.remove('active'));
+        document.getElementById('btnSaveApiModal').addEventListener('click', () => {
+          appSettings.gasApiUrl = document.getElementById('inputGasUrl').value.trim();
+          appSettings.pollIntervalSeconds = parseInt(document.getElementById('inputPollInterval').value, 10) || 5;
+          saveSettings();
+          apiModal.classList.remove('active');
+          startPolling();
+          showToast('Pengaturan Cloud tersimpan! Mencoba menghubungkan...');
+          fetchCloudState();
+        });
+
+        // Manual Refresh Button
+        document.getElementById('btnManualSync').addEventListener('click', () => {
+          if (!appSettings.gasApiUrl) {
+            showToast('⚠️ Masukkan URL Google Apps Script di menu pengaturan roda gigi.');
+            apiModal.classList.add('active');
+            return;
+          }
+          fetchCloudState();
+          showToast('🔄 Memeriksa pembaruan cloud...');
+        });
+
+        // Export CSV
+        document.getElementById('btnExportCsv').addEventListener('click', exportToCsv);
+
+        // Print PDF
+        document.getElementById('btnPrintReport').addEventListener('click', () => window.print());
+
+        // Reset History
+        document.getElementById('btnResetHistory').addEventListener('click', () => {
+          if (confirm('Hapus seluruh riwayat dinasan lokal hari ini?')) {
+            activityLogs = [];
+            appState.completedSwitches = [];
+            appState.switchTimes = {};
+            appState.posisiAktif = 'Standby di Pos';
+            appState.arah = '-';
+            appState.startTimeEpoch = null;
+            appState.statusIstirahat = false;
+            saveLocalState();
+            renderAllUI();
+            showToast('Riwayat berhasil direset.');
+            syncWithCloud();
+          }
+        });
+      }
+
+      function exportToCsv() {
+        if (activityLogs.length === 0) {
+          alert('Belum ada riwayat aktivitas untuk diunduh.');
+          return;
+        }
+
+        let csv = 'Jam,Posisi,Arah,Status,Durasi_Menit,Petugas\n';
+        activityLogs.forEach(l => {
+          csv += `"${l.jamPindah || ''}","${l.kePosisi || ''}","${l.arah || ''}","${l.status || ''}","${l.durasiMenit || 0}","${l.petugas || ''}"\n`;
+        });
+
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `PPKW_TRACKER_AWN_${new Date().toISOString().slice(0, 10)}.csv`;
+        link.click();
+      }
+
+      function showToast(message) {
+        const container = document.getElementById('toastContainer');
+        if (!container) return;
+        const toast = document.createElement('div');
+        toast.className = 'toast-msg';
+        toast.innerHTML = `<span>⚡</span><span>${message}</span>`;
+        container.appendChild(toast);
+        setTimeout(() => {
+          toast.style.opacity = '0';
+          toast.style.transform = 'translateY(10px)';
+          toast.style.transition = 'all 0.3s ease';
+          setTimeout(() => toast.remove(), 300);
+        }, 3200);
+      }
+
+      // Expose globally for inline onclick handlers
+      window.PPKW = {
+        setActivePosition: setActivePosition,
+        markDone: markDone,
+        resetSingle: resetSingle
+      };
+
+      // Bootstrap app on DOM Ready
+      document.addEventListener('DOMContentLoaded', initApp);
+
+    })();
+  </script>
+</body>
+</html>
